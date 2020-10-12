@@ -32,7 +32,7 @@ namespace RedisStudio
                 //options.ConfigurationOptions.DefaultDatabase = 1;
             });
 
-            services.AddSingleton<RedisCacheHelper, RedisCacheHelper>();
+            services.AddSingleton<RedisCacheHelper>();
             services.AddControllers();
         }
 
