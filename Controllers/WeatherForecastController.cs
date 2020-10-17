@@ -30,7 +30,7 @@ namespace RedisStudio.Controllers
             var existingTime = DateTime.UtcNow.ToString();
             DistributedCache.SetString(cacheKey, existingTime, new DistributedCacheEntryOptions()
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(120)
             });
 
             return "Added to cache : " + existingTime;
@@ -41,6 +41,14 @@ namespace RedisStudio.Controllers
         [HttpGet]
         public string Read()
         {
+            /*
+             * In redis-cli.exe per leggere il dato usare: hgetall <instanceName>TheTime
+             * Per vedere tutte le chiavi: keys *
+             * informazioni sul server: info server 
+             * cambiare db: select <index>
+             *
+             */
+
             var cacheKey = "TheTime";
             var existingTime = DistributedCache.GetString(cacheKey);
             if (!string.IsNullOrEmpty(existingTime))

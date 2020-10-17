@@ -28,8 +28,8 @@ namespace RedisStudio
             services.AddStackExchangeRedisCache(options =>
             {
                 //options.Configuration = "eaitdsrv009-ncox:6379, defaultDatabase=2"; //localhost
-                options.Configuration = "localhost:6379, defaultDatabase=2"; //localhost
-                options.InstanceName = "LocalRedis";
+                options.Configuration = "127.0.0.1:6379, defaultDatabase=2"; //localhost
+                options.InstanceName = "master";
 
                 //options.ConfigurationOptions.DefaultDatabase = 1;
             });
