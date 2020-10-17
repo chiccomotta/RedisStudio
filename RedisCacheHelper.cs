@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using System;
+using Microsoft.Extensions.Caching.Distributed;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -18,11 +19,13 @@ namespace RedisStudio
             return Deserialize<T>(DistributedCache.Get(cacheKey));
         }
 
-        public void Set(string cacheKey, object cacheValue)
+        public void Set(string cacheKey, object cacheValue, int expireInSeconds)
         {
-            DistributedCache.Set(cacheKey, Serialize(cacheValue));
+            DistributedCache.Set(cacheKey, Serialize(cacheValue),  new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(expireInSeconds)
+            });
         }
-
         public static byte[] Serialize(object obj)
         {
             if (obj == null)

@@ -22,8 +22,24 @@ namespace RedisStudio.Controllers
             RedisCache = redisCache;
         }
 
+        [Route("write")]
         [HttpGet]
-        public string Get()
+        public string Write()
+        {
+            var cacheKey = "TheTime";
+            var existingTime = DateTime.UtcNow.ToString();
+            DistributedCache.SetString(cacheKey, existingTime, new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+            });
+
+            return "Added to cache : " + existingTime;
+        }
+
+
+        [Route("read")]
+        [HttpGet]
+        public string Read()
         {
             var cacheKey = "TheTime";
             var existingTime = DistributedCache.GetString(cacheKey);
@@ -33,11 +49,10 @@ namespace RedisStudio.Controllers
             }
             else
             {
-                existingTime = DateTime.UtcNow.ToString();
-                DistributedCache.SetString(cacheKey, existingTime);
-                return "Added to cache : " + existingTime;
+                return "null";
             }
         }
+
 
         [Route("list")]
         [HttpGet]
@@ -52,7 +67,7 @@ namespace RedisStudio.Controllers
             }
             else
             {
-                RedisCache.Set(cacheKey, new List<string>{"pippo", "pluto", "paperino"});
+                RedisCache.Set(cacheKey, new List<string>{"pippo", "pluto", "paperino"}, 60);
                 return RedisCache.Get<List<string>>(cacheKey);
             }
         }
