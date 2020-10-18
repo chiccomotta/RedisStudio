@@ -42,7 +42,7 @@ namespace RedisStudio.Controllers
         public string Read()
         {
             /*
-             * In redis-cli.exe per leggere il dato usare: hgetall <instanceName>TheTime
+             * In redis-cli.exe per leggere il dato di tipo hash usare: hgetall <instanceName>TheTime
              * Per vedere tutte le chiavi: keys *
              * informazioni sul server: info server 
              * cambiare db: select <index>

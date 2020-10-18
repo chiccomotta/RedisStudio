@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.Extensions.Caching.Distributed;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace RedisStudio
 {
@@ -21,37 +21,33 @@ namespace RedisStudio
 
         public void Set(string cacheKey, object cacheValue, int expireInSeconds)
         {
-            DistributedCache.Set(cacheKey, Serialize(cacheValue),  new DistributedCacheEntryOptions()
+            DistributedCache.Set(cacheKey, Serialize(cacheValue), new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(expireInSeconds)
             });
         }
-        public static byte[] Serialize(object obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }
 
-            BinaryFormatter objBinaryFormatter = new BinaryFormatter();
-            using (MemoryStream objMemoryStream = new MemoryStream())
+        private static byte[] Serialize(object obj)
+        {
+            if (obj == null) return null;
+
+            var objBinaryFormatter = new BinaryFormatter();
+            using (var objMemoryStream = new MemoryStream())
             {
                 objBinaryFormatter.Serialize(objMemoryStream, obj);
-                byte[] objDataAsByte = objMemoryStream.ToArray();
-                return objDataAsByte;
+                return objMemoryStream.ToArray();
             }
         }
 
-        public static T Deserialize<T>(byte[] bytes)
+        private static T Deserialize<T>(byte[] bytes)
         {
-            BinaryFormatter objBinaryFormatter = new BinaryFormatter();
+            var objBinaryFormatter = new BinaryFormatter();
             if (bytes == null)
-                return default(T);
+                return default;
 
-            using (MemoryStream objMemoryStream = new MemoryStream(bytes))
+            using (var objMemoryStream = new MemoryStream(bytes))
             {
-                T result = (T) objBinaryFormatter.Deserialize(objMemoryStream);
-                return result;
+                return (T) objBinaryFormatter.Deserialize(objMemoryStream);
             }
         }
     }

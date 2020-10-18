@@ -27,10 +27,10 @@ namespace RedisStudio
         {
             services.AddStackExchangeRedisCache(options =>
             {
-                //options.Configuration = "eaitdsrv009-ncox:6379, defaultDatabase=2"; //localhost
-                options.Configuration = "127.0.0.1:6379, defaultDatabase=2"; //localhost
-                options.InstanceName = "master";
-
+                //options.Configuration = "eaitdsrv009-ncox:6379, defaultDatabase=2";   //localhost
+                options.Configuration = "127.0.0.1:6379, defaultDatabase=2";            //localhost
+                //options.InstanceName = "srv-api_";
+                
                 //options.ConfigurationOptions.DefaultDatabase = 1;
             });
 
