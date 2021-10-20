@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
+using RedisStudio.Models;
 
 namespace RedisStudio.Controllers
 {
@@ -36,6 +35,62 @@ namespace RedisStudio.Controllers
             return "Added to cache : " + existingTime;
         }
 
+        [Route("write2")]
+        [HttpGet]
+        public string Write2()
+        {
+            var list = new List<FooClass>();
+
+            for (int i = 0; i < 100; i++)
+            {
+                var t = new FooClass()
+                {
+                    BPDossierConfigId = 1,
+                    CAT = "44030",
+                    CATDescription = "Very long description",
+                    DefaultEvent = "99",
+                    CATDetail = "Test",
+                    OA = Guid.NewGuid().ToString(),
+                    InsertDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                    MP = Guid.NewGuid().ToString(),
+                    MPDescription = Guid.NewGuid().ToString()
+                };
+
+                list.Add(t);
+            }
+            
+            var cacheKey = "TheList";
+            DistributedCache.SetString(cacheKey, JsonSerializer.Serialize(list) , new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+            });
+
+            return "Added to cache : ";
+        }
+
+        [Route("read2")]
+        [HttpGet]
+        public ActionResult Read2()
+        {
+            var t1 = new Stopwatch();
+            t1.Start();
+
+            var cacheKey = "TheList";
+            var list = DistributedCache.GetString(cacheKey);
+            if (!string.IsNullOrEmpty(list))
+            {
+                //var res = JsonSerializer.Deserialize<IEnumerable<FooClass>>(list);
+                t1.Stop();
+
+                var tm = t1.Elapsed.ToString(@"m\:ss\.fff");
+                return Ok(list + Environment.NewLine + $"{tm}");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
         [Route("read")]
         [HttpGet]
@@ -77,6 +132,44 @@ namespace RedisStudio.Controllers
             {
                 RedisCache.Set(cacheKey, new List<string>{"pippo", "pluto", "paperino"}, 60);
                 return RedisCache.Get<List<string>>(cacheKey);
+            }
+        }
+
+        [Route("time")]
+        [HttpGet]
+        public IActionResult GetTime()
+        {
+            var dt =  DateTime.Parse("2020-10-26T07:20:00Z");
+            var timeUtc = dt.ToUniversalTime();
+
+            var lista = new List<string>();
+
+            try
+            {
+                //var localZone = TimeZone.CurrentTimeZone;
+                //var res = localZone.IsDaylightSavingTime(dt);
+
+                var zone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+                DateTime cstTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, zone);
+
+                //foreach (TimeZoneInfo z in TimeZoneInfo.GetSystemTimeZones())
+                //{
+
+                //    //TimeZoneInfo zone = TZConvert.GetTimeZoneInfo("W. Europe Standard Time");
+                //    DateTime cstTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, z);
+
+                //var t = zone.IsDaylightSavingTime(cstTime) ? zone.DaylightName : zone.StandardName;
+
+                lista.Add($"{zone.Id} {cstTime:hh:mm} - {zone}");
+                //}
+
+                //var tizoneCurrent = TimeZone.CurrentTimeZone;
+                //TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.ToString());
             }
         }
     }
