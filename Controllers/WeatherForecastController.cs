@@ -134,43 +134,5 @@ namespace RedisStudio.Controllers
                 return RedisCache.Get<List<string>>(cacheKey);
             }
         }
-
-        [Route("time")]
-        [HttpGet]
-        public IActionResult GetTime()
-        {
-            var dt =  DateTime.Parse("2020-10-26T07:20:00Z");
-            var timeUtc = dt.ToUniversalTime();
-
-            var lista = new List<string>();
-
-            try
-            {
-                //var localZone = TimeZone.CurrentTimeZone;
-                //var res = localZone.IsDaylightSavingTime(dt);
-
-                var zone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-                DateTime cstTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, zone);
-
-                //foreach (TimeZoneInfo z in TimeZoneInfo.GetSystemTimeZones())
-                //{
-
-                //    //TimeZoneInfo zone = TZConvert.GetTimeZoneInfo("W. Europe Standard Time");
-                //    DateTime cstTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, z);
-
-                //var t = zone.IsDaylightSavingTime(cstTime) ? zone.DaylightName : zone.StandardName;
-
-                lista.Add($"{zone.Id} {cstTime:hh:mm} - {zone}");
-                //}
-
-                //var tizoneCurrent = TimeZone.CurrentTimeZone;
-                //TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-                return Ok(lista);
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.ToString());
-            }
-        }
     }
 }
