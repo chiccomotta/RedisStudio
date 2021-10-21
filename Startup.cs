@@ -44,10 +44,9 @@ namespace RedisStudio
             services.AddSingleton<IConnectionMultiplexer>(opt =>
                 ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection")));
 
-            // Aggiungo un hosted services che resta in ascolto dei messaggi di Redis
+            // Aggiungo un BackgroundService che resta in ascolto dei messaggi di Redis
             services.AddHostedService<RedisSubscriber>();
-            
-            
+
             services.AddControllers();
         }
 
