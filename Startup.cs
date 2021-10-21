@@ -20,11 +20,19 @@ namespace RedisStudio
         {
             services.AddStackExchangeRedisCache(options =>
             {
-                //options.Configuration = "eaitdsrv009-ncox:6379, defaultDatabase=2";   //localhost
-                options.Configuration = "127.0.0.1:6379, defaultDatabase=2";            //localhost
-                //options.InstanceName = "srv-api_";
+                //options.Configuration = "eaitdsrv009-ncox:6379, defaultDatabase=2";
+                options.Configuration = "127.0.0.1:6379, defaultDatabase=2";            
                 
-                //options.ConfigurationOptions.DefaultDatabase = 1;
+                // Prefisso per evitare conflitti nel nome delle chiavi con altre applicazioni
+                options.InstanceName = "app-";
+                
+                //  #####     REDIS-CLI     ######
+
+                //   IN REDIS-CLI.EXE PER LEGGERE IL DATO DI TIPO HASH USARE: HGETALL <INSTANCENAME>THETIME
+                //   PER VEDERE TUTTE LE CHIAVI: KEYS *
+                //   INFORMAZIONI SUL SERVER: INFO SERVER 
+                //   CAMBIARE DB: SELECT <INDEX>
+
             });
 
             services.AddSingleton<RedisCacheHelper>();
