@@ -34,5 +34,19 @@ namespace RedisStudio.Controllers
             
             return Ok(value.ToString());
         }
+
+        [Route("pub")]
+        [HttpGet]
+        public async Task<IActionResult> Publish()
+        {
+            var subscriber = multiplexer.GetSubscriber();
+
+            for (int i = 0; i < 20; i++)
+            {
+                await subscriber.PublishAsync("messages", "TEST-----" +  i);
+            }
+
+            return Ok("OK");
+        }
     }
 }

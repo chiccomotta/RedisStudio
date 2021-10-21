@@ -18,6 +18,7 @@ namespace RedisStudio
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var subscriber = ConnectionMultiplexer.GetSubscriber();
+            
             return subscriber.SubscribeAsync("messages", (channel, value) =>
             {
                 Debug.WriteLine($"Message content was: {value}");
