@@ -19,7 +19,6 @@ namespace RedisStudio
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             // Questa configurazione funziona
             //services.AddStackExchangeRedisCache(options =>
             //{
@@ -35,7 +34,6 @@ namespace RedisStudio
             //    //   PER VEDERE TUTTE LE CHIAVI: KEYS *
             //    //   INFORMAZIONI SUL SERVER: INFO SERVER 
             //    //   CAMBIARE DB: SELECT <INDEX>
-
             //});
 
             //services.AddSingleton<RedisCacheHelper>();
