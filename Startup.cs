@@ -42,6 +42,13 @@ namespace RedisStudio
             services.AddSingleton<IConnectionMultiplexer>(opt =>
                 ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection")));
 
+            // Posso registrare direttamente il database nel container
+            services.AddScoped<IDatabase>(provider =>
+            {
+                var m = ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection"));
+                return m.GetDatabase();
+            });
+
             // Aggiungo un BackgroundService che resta in ascolto dei messaggi di Redis
             services.AddHostedService<RedisSubscriber>();
 

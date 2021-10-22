@@ -9,19 +9,22 @@ namespace RedisStudio.Controllers
     public class Multiplexer : ControllerBase
     {
         private readonly IConnectionMultiplexer multiplexer;
+        private readonly IDatabase redisDatabase;
 
-        public Multiplexer(IConnectionMultiplexer _multiplexer)
+        public Multiplexer(IConnectionMultiplexer _multiplexer, IDatabase _redisDatabase)
         {
             this.multiplexer = _multiplexer;
+            this.redisDatabase = _redisDatabase;
         }
 
         [Route("write")]
         [HttpGet]
         public async Task<IActionResult> Write()
         {
-            var db = multiplexer.GetDatabase();
-            await db.StringSetAsync("key2", "Valore numero 2....");
-            
+            //var db = multiplexer.GetDatabase();
+            //await db.StringSetAsync("key2", "Valore numero 2....");
+            await redisDatabase.StringSetAsync("key3", "Valore 3");
+
             return Ok("OK");
         }
 
