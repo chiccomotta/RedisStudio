@@ -20,17 +20,17 @@ namespace RedisStudio.Controllers
         public async Task<IActionResult> Write()
         {
             var db = multiplexer.GetDatabase();
-            await db.StringSetAsync("key1", "Value-1");
+            await db.StringSetAsync("key2", "Valore numero 2....");
             
             return Ok("OK");
         }
 
-        [Route("read")]
+        [Route("read/{key}")]
         [HttpGet]
-        public async Task<IActionResult> Read()
+        public async Task<IActionResult> Read(string key)
         {
             var db = multiplexer.GetDatabase();
-            var value = await db.StringGetAsync("key1");
+            var value = await db.StringGetAsync(key);
             
             return Ok(value.ToString());
         }
