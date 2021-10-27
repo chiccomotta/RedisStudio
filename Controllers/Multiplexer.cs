@@ -21,10 +21,7 @@ namespace RedisStudio.Controllers
         [HttpGet]
         public async Task<IActionResult> Write()
         {
-            //var db = multiplexer.GetDatabase();
-            //await db.StringSetAsync("key2", "Valore numero 2....");
             await redisDatabase.StringSetAsync("key3", "Valore 3");
-
             return Ok("OK");
         }
 
@@ -50,6 +47,36 @@ namespace RedisStudio.Controllers
             }
 
             return Ok("OK");
+        }
+
+        /// <summary>
+        /// Esempio di LIST Data Structure in Redis
+        /// </summary>
+        /// <returns></returns>
+        [Route("list")]
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var db = multiplexer.GetDatabase();
+            var key = "myList";
+
+            //var server = multiplexer.GetServer("127.0.0.1", 6379);
+            // await server.FlushDatabaseAsync(3);  SET AllowAdmin = TRUE
+
+            db.ListLeftPush(key, new RedisValue[]
+            {
+                "valore 1",
+                "valore 2",
+                "valore 3",
+                "valore 4",
+                "valore 5",
+                "valore 6"
+            });
+
+            var list = db.ListRange(key, 0, 2);
+            var t = list.ToStringArray();
+
+            return Ok(t);
         }
     }
 }
