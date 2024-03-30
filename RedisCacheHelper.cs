@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using System;
 
 namespace RedisStudio
 {
@@ -16,39 +15,27 @@ namespace RedisStudio
 
         public T Get<T>(string cacheKey)
         {
-            return Deserialize<T>(DistributedCache.Get(cacheKey));
+            return Deserialize<T>(DistributedCache.GetString(cacheKey));
         }
 
         public void Set(string cacheKey, object cacheValue, int expireInSeconds)
         {
-            DistributedCache.Set(cacheKey, Serialize(cacheValue), new DistributedCacheEntryOptions
+            DistributedCache.SetString(cacheKey, Serialize(cacheValue), new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(expireInSeconds)
             });
         }
 
-        private static byte[] Serialize(object obj)
+        private static string Serialize(object obj)
         {
             if (obj == null) return null;
 
-            var objBinaryFormatter = new BinaryFormatter();
-            using (var objMemoryStream = new MemoryStream())
-            {
-                objBinaryFormatter.Serialize(objMemoryStream, obj);
-                return objMemoryStream.ToArray();
-            }
+            return JsonConvert.SerializeObject(obj);
         }
 
-        private static T Deserialize<T>(byte[] bytes)
+        private static T Deserialize<T>(string json)
         {
-            var objBinaryFormatter = new BinaryFormatter();
-            if (bytes == null)
-                return default;
-
-            using (var objMemoryStream = new MemoryStream(bytes))
-            {
-                return (T) objBinaryFormatter.Deserialize(objMemoryStream);
-            }
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

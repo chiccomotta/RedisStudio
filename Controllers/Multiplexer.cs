@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using RedisStudio.DbContext;
 using StackExchange.Redis;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RedisStudio.Controllers
 {
@@ -10,18 +12,34 @@ namespace RedisStudio.Controllers
     {
         private readonly IConnectionMultiplexer multiplexer;
         private readonly IDatabase redisDatabase;
+        private readonly MyContext _context;
 
-        public Multiplexer(IConnectionMultiplexer _multiplexer, IDatabase _redisDatabase)
+        public Multiplexer(IConnectionMultiplexer _multiplexer, IDatabase _redisDatabase, MyContext context)
         {
             this.multiplexer = _multiplexer;
             this.redisDatabase = _redisDatabase;
+            _context = context;
+        }
+
+        [Route("db")]
+        [HttpGet]
+        public IActionResult Db()
+        {
+            var query =  _context.Travel.Where(i => i.Enabled == true);
+            var key = query.GetCacheKey();
+
+            return Ok(key);
         }
 
         [Route("write")]
         [HttpGet]
         public async Task<IActionResult> Write()
         {
-            await redisDatabase.StringSetAsync("key3", "Valore 3");
+            await redisDatabase.StringSetAsync("key3", "Valore 3.1");
+            await redisDatabase.StringSetAsync("key4", "Valore 4.1");
+            await redisDatabase.StringSetAsync("key5", "Valore 5.1");
+            await redisDatabase.StringSetAsync("key6", "Valore 6.1");
+
             return Ok("OK");
         }
 
@@ -31,7 +49,7 @@ namespace RedisStudio.Controllers
         {
             var db = multiplexer.GetDatabase();
             var value = await db.StringGetAsync(key);
-            
+
             return Ok(value.ToString());
         }
 

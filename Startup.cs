@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RedisStudio.DbContext;
 using StackExchange.Redis;
 
 namespace RedisStudio
@@ -51,6 +53,10 @@ namespace RedisStudio
 
             // Aggiungo un BackgroundService che resta in ascolto dei messaggi di Redis
             services.AddHostedService<RedisSubscriber>();
+
+            services.AddDbContext<MyContext>(
+                options => options.UseSqlServer(
+                    "Server=DESKTOP-GSGE42P\\MSSQLSERVER01;Database=test;User Id=sa;Password=chicco73;MultipleActiveResultSets=True;Encrypt=False;", sqlServerOptions => sqlServerOptions.CommandTimeout(30)));
 
             services.AddControllers();
         }
