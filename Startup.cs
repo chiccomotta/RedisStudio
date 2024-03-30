@@ -71,7 +71,7 @@ namespace RedisStudio
             }
 
             // Setto il multiplexer nella classe statica RedisCache
-            RedisCache.Multiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
+            app.UseRedisCache();
 
             app.UseHttpsRedirection();
 
