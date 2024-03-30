@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using RedisStudio.DbContext;
 using StackExchange.Redis;
 using System.Linq;
@@ -27,11 +28,11 @@ namespace RedisStudio.Controllers
         public IActionResult Db()
         {
             var query =  _context.Travel.Where(i => i.Enabled == true);
-            var key = query.GetCacheKey();
+            //var key = query.GetCacheKey();
 
+            var result = query.FromCache(new TimeSpan(8,0,0));
 
-
-            return Ok(key);
+            return Ok(result);
         }
 
         [Route("write")]
