@@ -24,5 +24,9 @@
     <PackageReference Include="TimeZoneConverter" Version="6.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CM.RedisCache\CM.RedisCache.csproj" />
+  </ItemGroup>
+
 
 </Project>

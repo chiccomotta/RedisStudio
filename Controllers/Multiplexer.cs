@@ -3,6 +3,7 @@ using RedisStudio.DbContext;
 using StackExchange.Redis;
 using System.Linq;
 using System.Threading.Tasks;
+using CM.RedisCache;
 
 namespace RedisStudio.Controllers
 {
