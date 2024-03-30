@@ -43,9 +43,7 @@ public class Multiplexer : ControllerBase
     {
         var query =  _context.Travel.Where(i => i.Enabled == true && i.City.StartsWith("Port"));
         //var key = query.GetCacheKey();
-
         var result = query.FromCache(TimeSpan.FromHours(24));
-
         return Ok(result);
     }
 
