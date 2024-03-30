@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
 using System.Text;
+using StackExchange.Redis;
+using static System.Security.Cryptography.MD5;
 
 namespace RedisStudio;
 
 public static class RedisCache
 {
+    public static IConnectionMultiplexer Multiplexer { get; set; }
+
     /// <summary>
     /// Gets a cache key for a query.
     /// </summary>
     public static string GetCacheKey(this IQueryable query)
     {
+        Debug.WriteLine(Multiplexer.ClientName);
+
         var expression = query.Expression;
 
         // locally evaluate as much of the query as possible
@@ -26,9 +32,8 @@ public static class RedisCache
         // use the string representation of the expression for the cache key
         var key = expression.ToString();
 
-        // the key is potentially very long, so use an md5 fingerprint
-        // (fine if the query result data isn't critically sensitive)
-        key = key.ToMd5Fingerprint();
+        // the key is potentially very long, so use md5 fingerprint (fine if the query result data isn't critically sensitive)
+        key = key.ToMd5();
 
         return key;
     }
@@ -56,10 +61,6 @@ public static class RedisCache
 /// <summary>
 /// Enables the partial evaluation of queries.
 /// </summary>
-/// <remarks>
-/// From http://msdn.microsoft.com/en-us/library/bb546158.aspx
-/// Copyright notice http://msdn.microsoft.com/en-gb/cc300389.aspx#O
-/// </remarks>
 public static class Evaluator
 {
     /// <summary>
@@ -174,10 +175,10 @@ public static class Utility
     /// <summary>
     /// Creates an MD5 fingerprint of the string.
     /// </summary>
-    public static string ToMd5Fingerprint(this string s)
+    public static string ToMd5(this string s)
     {
         var bytes = Encoding.Unicode.GetBytes(s.ToCharArray());
-        var hash = new MD5CryptoServiceProvider().ComputeHash(bytes);
+        var hash = HashData(bytes);
 
         // concat the hash bytes into one long string
         return hash.Aggregate(new StringBuilder(32),

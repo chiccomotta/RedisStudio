@@ -69,6 +69,9 @@ namespace RedisStudio
                 app.UseDeveloperExceptionPage();
             }
 
+            // Setto il multiplexer nella classe statica RedisCache
+            RedisCache.Multiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

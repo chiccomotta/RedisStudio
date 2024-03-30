@@ -28,6 +28,8 @@ namespace RedisStudio.Controllers
             var query =  _context.Travel.Where(i => i.Enabled == true);
             var key = query.GetCacheKey();
 
+
+
             return Ok(key);
         }
 
