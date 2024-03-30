@@ -29,7 +29,7 @@ public class Multiplexer : ControllerBase
     [HttpGet]
     public IActionResult Feed()
     {
-        List<Travel> travels = DbUtility.Feed(100);
+        List<Travel> travels = DbUtility.Feed(1000);
 
         _context.Travel.AddRange(travels);
         _context.SaveChanges();
@@ -39,11 +39,18 @@ public class Multiplexer : ControllerBase
 
     [Route("db")]
     [HttpGet]
-    public IActionResult Db()
+    public async Task<IActionResult> Db()
     {
-        var query =  _context.Travel.Where(i => i.Enabled == true && i.City.StartsWith("Port"));
+        //var query = _context.Travel.Where(i => i.Enabled == true && i.City.StartsWith("Port"));
+        var nations = new String[]
+        {
+            "Italy", "Georgia"
+        };
+
+        var query = _context.Travel.Where(i => i.Enabled == true && nations.Contains(i.Nation));
+        
         //var key = query.GetCacheKey();
-        var result = query.FromCache(TimeSpan.FromHours(24));
+        var result = await query.FromCacheAsync(TimeSpan.FromHours(24));
         return Ok(result);
     }
 
