@@ -40,17 +40,14 @@ namespace RedisStudio
             //});
 
             //services.AddSingleton<RedisCacheHelper>();
-            
-            // Altra configurazione che utilizza direttamente la classe Multiplexer
-            services.AddSingleton<IConnectionMultiplexer>(opt =>
-                ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection")));
+            services.AddRedisService(Configuration.GetValue<string>("RedisConnection"));
 
             // Posso registrare direttamente il database nel container
-            services.AddScoped<IDatabase>(provider =>
-            {
-                var mplexer = ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection"));
-                return mplexer.GetDatabase();
-            });
+            //services.AddScoped<IDatabase>(provider =>
+            //{
+            //    var mplexer = ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection"));
+            //    return mplexer.GetDatabase();
+            //});
 
             // Aggiungo un BackgroundService che resta in ascolto dei messaggi di Redis
             services.AddHostedService<RedisSubscriber>();

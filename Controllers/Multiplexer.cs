@@ -15,13 +15,11 @@ namespace RedisStudio.Controllers;
 public class Multiplexer : ControllerBase
 {
     private readonly IConnectionMultiplexer multiplexer;
-    private readonly IDatabase redisDatabase;
     private readonly MyContext _context;
 
-    public Multiplexer(IConnectionMultiplexer _multiplexer, IDatabase _redisDatabase, MyContext context)
+    public Multiplexer(IConnectionMultiplexer _multiplexer, MyContext context)
     {
         this.multiplexer = _multiplexer;
-        this.redisDatabase = _redisDatabase;
         _context = context;
     }
 
@@ -47,10 +45,10 @@ public class Multiplexer : ControllerBase
             "Italy", "Georgia"
         };
 
-        var query = _context.Travel.Where(i => i.Enabled == true && nations.Contains(i.Nation));
+        var query = _context.Travel.Where(i => i.Enabled == true && nations.Contains(i.Nation) && i.City.StartsWith("West"));
         
         //var key = query.GetCacheKey();
-        var result = await query.FromCacheAsync(TimeSpan.FromHours(24));
+        var result = await query.GetFromCacheAsync(TimeSpan.FromHours(24));
         return Ok(result);
     }
 
@@ -58,10 +56,12 @@ public class Multiplexer : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Write()
     {
-        await redisDatabase.StringSetAsync("key3", "Valore 3.1");
-        await redisDatabase.StringSetAsync("key4", "Valore 4.1");
-        await redisDatabase.StringSetAsync("key5", "Valore 5.1");
-        await redisDatabase.StringSetAsync("key6", "Valore 6.1");
+        var db = multiplexer.GetDatabase();
+
+        await db.StringSetAsync("key3", "Valore 3.1");
+        await db.StringSetAsync("key4", "Valore 4.1");
+        await db.StringSetAsync("key5", "Valore 5.1");
+        await db.StringSetAsync("key6", "Valore 6.1");
 
         return Ok("OK");
     }
