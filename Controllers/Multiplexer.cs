@@ -42,10 +42,10 @@ public class Multiplexer : ControllerBase
         //var query = _context.Travel.Where(i => i.Enabled == true && i.City.StartsWith("Port"));
         var nations = new String[]
         {
-            "Italy", "Georgia"
+            "Italy", "Georgia", "Japan"
         };
 
-        var query = _context.Travel.Where(i => i.Enabled == true && nations.Contains(i.Nation) && i.City.StartsWith("West"));
+        var query = _context.Travel.Where(i => i.Enabled == true && nations.Contains(i.Nation));
         
         //var key = query.GetCacheKey();
         var result = await query.GetFromCacheAsync(24);
