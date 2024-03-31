@@ -40,7 +40,7 @@ namespace RedisStudio
             //});
 
             //services.AddSingleton<RedisCacheHelper>();
-            services.AddRedisService(Configuration.GetValue<string>("RedisConnection"));
+            services.AddRedisCacheService(Configuration.GetValue<string>("RedisConnection"));
 
             // Posso registrare direttamente il database nel container
             //services.AddScoped<IDatabase>(provider =>
