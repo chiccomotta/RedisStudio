@@ -27,7 +27,7 @@ public class Multiplexer : ControllerBase
     [HttpGet]
     public IActionResult Feed()
     {
-        List<Travel> travels = DbUtility.Feed(1000);
+        List<Travel> travels = DbUtility.Feed(10000);
 
         _context.Travel.AddRange(travels);
         _context.SaveChanges();
@@ -118,5 +118,12 @@ public class Multiplexer : ControllerBase
         var t = list.ToStringArray();
 
         return Ok(t);
+    }
+
+    [Route("start")]
+    [HttpGet]
+    public async Task<IActionResult> Start()
+    {
+        return await Task.FromResult(Ok("Web app started successfully"));
     }
 }
