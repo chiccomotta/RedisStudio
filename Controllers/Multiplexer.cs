@@ -45,7 +45,7 @@ public class Multiplexer : ControllerBase
             "Italy", "Georgia", "Japan"
         };
 
-        var query = _context.Travel.Where(i => i.Enabled == true && nations.Contains(i.Nation));
+        var query = _context.Travel.Where(i => i.Enabled == false && nations.Contains(i.Nation));
         
         //var key = query.GetCacheKey();
         var result = await query.GetFromCacheAsync(24);
