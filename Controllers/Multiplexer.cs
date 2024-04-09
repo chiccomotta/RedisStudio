@@ -52,6 +52,34 @@ public class Multiplexer : ControllerBase
         return Ok(result);
     }
 
+    [Route("hash")]
+    [HttpGet]
+    public async Task<IActionResult> Hash()
+    {
+        RedisCache.HashSet("user.e600418", 
+            HashSetBuilder
+                .New()
+                .Add("code", 1234567)
+                .Add("name", "Cristiano")
+                .Add("address", "Via Valeriana 14")
+                .Add("city", "Sondrio")
+                .Build());
+        return Ok("OK");
+    }
+
+    [Route("hash-object")]
+    [HttpGet]
+    public async Task<IActionResult> HashObject()
+    {
+        var travel = DbUtility.Feed(10).First();
+
+        travel.Latitudine = null;
+        travel.Longitudine = null;
+
+        RedisCache.HashSet("user.e600418", travel);
+        return await Task.FromResult(Ok("OK"));
+    }
+
     [Route("write")]
     [HttpGet]
     public async Task<IActionResult> Write()

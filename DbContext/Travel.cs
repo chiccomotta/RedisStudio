@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RedisStudio.DbContext;
 
 public partial class Travel
 {
+    [DisplayName("ID_TRAVEL")]
     public int TravelId { get; set; }
 
     public string DossierCode { get; set; }
@@ -23,6 +25,7 @@ public partial class Travel
 
     public DateTime? EndDate { get; set; }
 
+    [DisplayName("TIPO_TRASPORTO")]
     public int? TransportType { get; set; }
 
     public DateTime? InsertDate { get; set; }
