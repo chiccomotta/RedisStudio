@@ -71,13 +71,21 @@ public class Multiplexer : ControllerBase
     [HttpGet]
     public async Task<IActionResult> HashObject()
     {
-        var travel = DbUtility.Feed(10).First();
+        var travel = DbUtility.Feed(1).First();
 
         travel.Latitudine = null;
         travel.Longitudine = null;
 
         RedisCache.HashSet("user.e600418", travel);
         return await Task.FromResult(Ok("OK"));
+    }
+
+    [Route("gethashall")]
+    [HttpGet]
+    public async Task<IActionResult> GetHashAll()
+    {
+        var list = RedisCache.HashSetGetAll("user.e600418");
+        return await Task.FromResult(Ok(list));
     }
 
     [Route("write")]
