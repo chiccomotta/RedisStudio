@@ -78,6 +78,20 @@ public class Multiplexer : ControllerBase
 
         RedisCache.HashSet("user.e600418", travel);
         return await Task.FromResult(Ok("OK"));
+
+        //var anonymous = new
+        //{
+        //    name = "Pasquale",
+        //    id = 1001,
+        //    data = DateTime.Now
+        //};
+
+        //RedisCache.HashSet("user.e600418", anonymous);
+        //return await Task.FromResult(Ok("OK"));
+
+        // Delete hashset
+        //RedisCache.HashSetDelete("user.e600418");
+        //return await Task.FromResult(Ok("OK"));
     }
 
     [Route("gethashall")]
