@@ -73,8 +73,8 @@ public class Multiplexer : ControllerBase
     {
         var travel = DbUtility.Feed(1).First();
 
-        travel.Latitudine = null;
-        travel.Longitudine = null;
+        //travel.Latitudine = null;
+        //travel.Longitudine = null;
 
         RedisCache.HashSet("user.e600418", travel);
         return await Task.FromResult(Ok("OK"));
